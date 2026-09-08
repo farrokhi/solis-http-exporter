@@ -169,12 +169,48 @@ func checkBadFields(t *testing.T, got []BadField, want []string) {
 	}
 }
 
+// Captured from an E3 logger on firmware 49002F, which puts the letter "d"
+// where the spec expects a lifetime yield. The serial is anonymised.
+func TestParseE3FirmwareWithoutLifetimeYield(t *testing.T) {
+	got, err := Parse(load(t, "inverter-e3-no-total.txt"))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	if got.Model != "E3" || got.Firmware != "49002F" {
+		t.Errorf("identity = %q/%q", got.Firmware, got.Model)
+	}
+	checkFloat(t, "TemperatureCelsius", got.TemperatureCelsius, new(32.1))
+	checkFloat(t, "PowerWatts", got.PowerWatts, new(100.0))
+	checkFloat(t, "EnergyTodayKWh", got.EnergyTodayKWh, new(0.4))
+	checkFloat(t, "EnergyTotalKWh", got.EnergyTotalKWh, nil)
+	if got.AlertActive() {
+		t.Error("NO is not an alert")
+	}
+	if len(got.BadFields) != 1 || got.BadFields[0].OutOfRange {
+		t.Errorf("BadFields = %+v, want yield_total unreported rather than out of range", got.BadFields)
+	}
+}
+
+func TestOutOfRangeIsDistinctFromUnreported(t *testing.T) {
+	got, err := Parse([]byte("1802020228090133;780036;202;40.1;-1;5.4;;NO;"))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	checkBadFields(t, got.BadFields, []string{"current_power", "yield_total"})
+	if !got.BadFields[0].OutOfRange {
+		t.Error("a negative power is a number that cannot be real")
+	}
+	if got.BadFields[1].OutOfRange {
+		t.Error("an empty field was never a number")
+	}
+}
+
 func TestBadFieldCarriesTheRawValue(t *testing.T) {
 	got, err := Parse([]byte("1802020228090133;780036;202;40.1;900;5.4;n/a;NO;"))
 	if err != nil {
 		t.Fatalf("Parse: %v", err)
 	}
-	if len(got.BadFields) != 1 || got.BadFields[0] != (BadField{"yield_total", "n/a"}) {
+	if len(got.BadFields) != 1 || got.BadFields[0] != (BadField{Name: "yield_total", Raw: "n/a"}) {
 		t.Errorf("BadFields = %+v, want the offending value kept", got.BadFields)
 	}
 }
