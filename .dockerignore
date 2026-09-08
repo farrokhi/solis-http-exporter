@@ -1,0 +1,5 @@
+.git
+.github
+dist
+*.password
+solis_http_exporter

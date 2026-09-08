@@ -1,0 +1,38 @@
+[Unit]
+Description=Prometheus exporter for Solis inverter Wi-Fi loggers
+Documentation=https://github.com/farrokhi/solis-http-exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/solis_http_exporter --config.file=/etc/solis-http-exporter/config.yml
+Restart=on-failure
+RestartSec=5s
+
+User=solis-exporter
+Group=solis-exporter
+
+CapabilityBoundingSet=
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+NoNewPrivileges=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectClock=yes
+ProtectControlGroups=yes
+ProtectHome=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectProc=invisible
+ProtectSystem=strict
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+
+[Install]
+WantedBy=multi-user.target

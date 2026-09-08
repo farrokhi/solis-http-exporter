@@ -178,7 +178,7 @@ func newLogger(level string) (*slog.Logger, error) {
 func versionString() string {
 	v := version
 	if v == "dev" {
-		if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" {
+		if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
 			v = bi.Main.Version
 		}
 	}
