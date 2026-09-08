@@ -95,10 +95,11 @@ adjust it to your liking.
 Note that the today's number reset at midnight. This is why it is a gauge, while
 the lifetime number is a counter.
 
-Not every logger fills in the lifetime figure. Both sticks I have put the letter `d` in that
-field instead of a number, on firmware `780036` and `49002F` alike, so
-`solis_inverter_energy_joules_total` never appears for them. Grafana can add up
-`solis_inverter_energy_today_joules` over time if you want a lifetime figure anyway.
+Not every logger fills in the lifetime figure. Both of mine put the letter `d` in that field,
+on firmware `780036` and `49002F` alike, and the stick's own status page dutifully prints
+`Total yield: dkWh`, so the firmware is what is missing here rather than the exporter.
+`solis_inverter_energy_joules_total` simply never appears for those. Grafana can sum
+`solis_inverter_energy_today_joules` over time if you want a lifetime figure.
 
 If the answer received from the inverter is not valid (or we get refused connection, timeout, bad credentials, or simply unparsable response), `solis_up` is set to 0. If we get the answer, but a field has incorrect value, e.g. `yield_total` is negative, `solis_up` stays at 1, and other metrics are published as usual.
 
@@ -113,6 +114,10 @@ scrape_configs:
 ```
 
 There is no cache in front of the loggers, this means each scrape is an expensive request for your inverter, so you may not want to reduce the scrape interval.
+
+The stick polls the inverter on its own schedule and serves you the last answer it got; its
+status page shows the age of that reading. Scraping faster than the stick refreshes gets you
+the same numbers twice.
 
 ## Important notes
 
