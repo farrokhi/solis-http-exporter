@@ -55,7 +55,88 @@
                       },
                       "spec": {
                         "expr": "sum(solis_inverter_power_watts{target=~\"$target\"})",
-                        "legendFormat": "__auto"
+                        "legendFormat": "Total"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "colorMode": "none",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "watt",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "text"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-10": {
+        "kind": "Panel",
+        "spec": {
+          "id": 10,
+          "title": "Peak power today",
+          "description": "Highest combined output over the last 24 hours.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "max_over_time(sum(solis_inverter_power_watts{target=~\"$target\"})[24h:])",
+                        "legendFormat": "Total"
                       }
                     },
                     "refId": "A",
@@ -74,8 +155,7 @@
             "spec": {
               "options": {
                 "colorMode": "none",
-                "graphMode": "area",
-                "justifyMode": "auto",
+                "graphMode": "none",
                 "reduceOptions": {
                   "calcs": [
                     "lastNotNull"
@@ -90,6 +170,15 @@
                 "defaults": {
                   "unit": "watt",
                   "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      }
+                    ]
+                  },
                   "color": {
                     "mode": "fixed",
                     "fixedColor": "text"
@@ -101,12 +190,11 @@
           }
         }
       },
-      "panel-10": {
+      "panel-2": {
         "kind": "Panel",
         "spec": {
-          "id": 10,
-          "title": "Scrape duration",
-          "description": "One HTTP request to the logger. A climb here means the stick is struggling.",
+          "id": 2,
+          "title": "Energy today",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -123,7 +211,253 @@
                         "name": "${datasource}"
                       },
                       "spec": {
-                        "expr": "solis_scrape_duration_seconds{target=~\"$target\"}",
+                        "expr": "sum(solis_inverter_energy_today_joules{target=~\"$target\"}) / 3600000",
+                        "legendFormat": "Total"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "colorMode": "none",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "kwatth",
+                  "decimals": 1,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "text"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "id": 3,
+          "title": "Lifetime energy",
+          "description": "Not every logger reports lifetime yield; those that do not leave this empty.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "sum(solis_inverter_energy_joules_total{target=~\"$target\"}) / 3600000",
+                        "legendFormat": "Total"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "colorMode": "none",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "kwatth",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "text"
+                  },
+                  "noValue": "n/a"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "id": 4,
+          "title": "Alerts active",
+          "description": "Counts inverters whose alert field reads anything other than NO.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "sum(solis_inverter_alert_active{target=~\"$target\"})",
+                        "legendFormat": "Alerts"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "green"
+                      },
+                      {
+                        "value": 1,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "id": 5,
+          "title": "Output power",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "solis_inverter_power_watts{target=~\"$target\"}",
                         "legendFormat": "{{target}}"
                       }
                     },
@@ -139,44 +473,70 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max",
-                    "mean"
-                  ],
-                  "displayMode": "table",
+                  "calcs": [],
+                  "displayMode": "list",
                   "placement": "bottom",
                   "showLegend": true
                 },
                 "tooltip": {
-                  "hideZeros": true,
+                  "hideZeros": false,
                   "mode": "multi",
                   "sort": "desc"
                 }
               },
               "fieldConfig": {
                 "defaults": {
-                  "unit": "s",
-                  "decimals": 3,
+                  "unit": "watt",
                   "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      }
+                    ]
+                  },
                   "color": {
                     "mode": "palette-classic"
                   },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
+                    "fillOpacity": 10,
                     "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
                     "lineInterpolation": "linear",
                     "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
-                    "spanNulls": false
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": []
@@ -185,10 +545,336 @@
           }
         }
       },
-      "panel-11": {
+      "panel-6": {
         "kind": "Panel",
         "spec": {
-          "id": 11,
+          "id": 6,
+          "title": "Inverter temperature",
+          "description": "Dashed lines mark 60 and 70 C. Adjust them to your inverter's rating.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "solis_inverter_temperature_celsius{target=~\"$target\"}",
+                        "legendFormat": "{{target}}"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "celsius",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      },
+                      {
+                        "value": 60,
+                        "color": "orange"
+                      },
+                      {
+                        "value": 70,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "dashed"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "id": 7,
+          "title": "Energy produced today",
+          "description": "Resets to zero at midnight, which is why it is a gauge rather than a counter.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "solis_inverter_energy_today_joules{target=~\"$target\"} / 3600000",
+                        "legendFormat": "{{target}}"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "kwatth",
+                  "decimals": 1,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 15,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "id": 8,
+          "title": "Reachable",
+          "description": "The logging stick is powered by the inverter, so 0 overnight is expected.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "solis_up{target=~\"$target\"}",
+                        "legendFormat": "{{target}}"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "value_and_name",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "mappings": [
+                    {
+                      "type": "value",
+                      "options": {
+                        "0": {
+                          "text": "No answer",
+                          "index": 0
+                        },
+                        "1": {
+                          "text": "up",
+                          "index": 1
+                        }
+                      }
+                    }
+                  ],
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "red"
+                      },
+                      {
+                        "value": 1,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "id": 9,
           "title": "Inverters",
           "links": [],
           "data": {
@@ -251,17 +937,23 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "table",
-            "version": "",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "cellHeight": "sm",
-                "footer": {
-                  "show": false
-                },
                 "showHeader": true
               },
               "fieldConfig": {
                 "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      }
+                    ]
+                  },
                   "color": {
                     "mode": "thresholds"
                   },
@@ -270,670 +962,11 @@
                     "cellOptions": {
                       "type": "auto"
                     },
-                    "filterable": false
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-2": {
-        "kind": "Panel",
-        "spec": {
-          "id": 2,
-          "title": "Energy today",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "sum(solis_inverter_energy_today_joules{target=~\"$target\"}) / 3600000",
-                        "legendFormat": "__auto"
-                      }
+                    "filterable": false,
+                    "footer": {
+                      "reducers": []
                     },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "stat",
-            "version": "",
-            "spec": {
-              "options": {
-                "colorMode": "none",
-                "graphMode": "area",
-                "justifyMode": "auto",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "textMode": "auto",
-                "wideLayout": true
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "kwatth",
-                  "decimals": 1,
-                  "color": {
-                    "mode": "fixed",
-                    "fixedColor": "text"
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-3": {
-        "kind": "Panel",
-        "spec": {
-          "id": 3,
-          "title": "Peak power today",
-          "description": "Highest combined output in the last 24 hours.",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "max_over_time(sum(solis_inverter_power_watts{target=~\"$target\"})[24h:])",
-                        "legendFormat": "__auto"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "stat",
-            "version": "",
-            "spec": {
-              "options": {
-                "colorMode": "none",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "textMode": "auto",
-                "wideLayout": true
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "watt",
-                  "decimals": 0,
-                  "color": {
-                    "mode": "fixed",
-                    "fixedColor": "text"
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-4": {
-        "kind": "Panel",
-        "spec": {
-          "id": 4,
-          "title": "Alerts active",
-          "description": "Inverters whose alert field reads anything other than NO.",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "sum(solis_inverter_alert_active{target=~\"$target\"})",
-                        "legendFormat": "__auto"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "stat",
-            "version": "",
-            "spec": {
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "textMode": "auto",
-                "wideLayout": true
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "short",
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": null,
-                        "color": "green"
-                      },
-                      {
-                        "value": 1,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "thresholds"
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-5": {
-        "kind": "Panel",
-        "spec": {
-          "id": 5,
-          "title": "Output power",
-          "description": "Stacked, so the outline is total output and each band is one inverter. Both go blank overnight, when the loggers lose power with the inverters.",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "solis_inverter_power_watts{target=~\"$target\"}",
-                        "legendFormat": "{{target}}"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "timeseries",
-            "version": "",
-            "spec": {
-              "options": {
-                "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max",
-                    "mean"
-                  ],
-                  "displayMode": "table",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": true,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "watt",
-                  "min": 0,
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisSoftMax": 500,
-                    "barAlignment": 0,
-                    "drawStyle": "line",
-                    "fillOpacity": 25,
-                    "gradientMode": "none",
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "showPoints": "never",
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "normal"
-                    }
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-6": {
-        "kind": "Panel",
-        "spec": {
-          "id": 6,
-          "title": "Energy today by inverter",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "solis_inverter_energy_today_joules{target=~\"$target\"} / 3600000",
-                        "instant": true,
-                        "legendFormat": "{{target}}"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "bargauge",
-            "version": "",
-            "spec": {
-              "options": {
-                "displayMode": "gradient",
-                "maxVizHeight": 300,
-                "orientation": "horizontal",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showUnfilled": true,
-                "valueMode": "color"
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "kwatth",
-                  "decimals": 1,
-                  "min": 0,
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "fieldMinMax": true
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-7": {
-        "kind": "Panel",
-        "spec": {
-          "id": 7,
-          "title": "Daily yield",
-          "description": "Each bar is that day's final reading, in UTC days. Pinned to 14 days so it stays useful whatever the dashboard range is.",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "max_over_time(solis_inverter_energy_today_joules{target=~\"$target\"}[1d]) / 3600000",
-                        "interval": "1d",
-                        "legendFormat": "{{target}}"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {
-                "timeFrom": "14d"
-              }
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "timeseries",
-            "version": "",
-            "spec": {
-              "options": {
-                "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max",
-                    "mean"
-                  ],
-                  "displayMode": "table",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": true,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "kwatth",
-                  "decimals": 1,
-                  "min": 0,
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "barAlignment": 0,
-                    "drawStyle": "bars",
-                    "fillOpacity": 70,
-                    "gradientMode": "none",
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "showPoints": "never",
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "normal"
-                    }
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-8": {
-        "kind": "Panel",
-        "spec": {
-          "id": 8,
-          "title": "Inverter temperature",
-          "description": "Dashed lines mark 60 and 70 C. Adjust them to your inverter's rating.",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "solis_inverter_temperature_celsius{target=~\"$target\"}",
-                        "legendFormat": "{{target}}"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "timeseries",
-            "version": "",
-            "spec": {
-              "options": {
-                "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max",
-                    "mean"
-                  ],
-                  "displayMode": "table",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": true,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "celsius",
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": null,
-                        "color": "text"
-                      },
-                      {
-                        "value": 60,
-                        "color": "orange"
-                      },
-                      {
-                        "value": 70,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "barAlignment": 0,
-                    "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "showPoints": "never",
-                    "spanNulls": false,
-                    "thresholdsStyle": {
-                      "mode": "dashed"
-                    }
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-9": {
-        "kind": "Panel",
-        "spec": {
-          "id": 9,
-          "title": "Reachable",
-          "description": "The stick is powered by the inverter, so 0 overnight is expected and not worth alerting on by itself.",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
-                      "datasource": {
-                        "name": "${datasource}"
-                      },
-                      "spec": {
-                        "expr": "solis_up{target=~\"$target\"}",
-                        "legendFormat": "{{target}}"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "stat",
-            "version": "",
-            "spec": {
-              "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "textMode": "value_and_name",
-                "wideLayout": true
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "short",
-                  "mappings": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "0": {
-                          "text": "No answer",
-                          "index": 0
-                        },
-                        "1": {
-                          "text": "Up",
-                          "index": 1
-                        }
-                      }
-                    }
-                  ],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": null,
-                        "color": "red"
-                      },
-                      {
-                        "value": 1,
-                        "color": "green"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "thresholds"
+                    "inspect": false
                   }
                 },
                 "overrides": []
@@ -952,7 +985,7 @@
             "spec": {
               "x": 0,
               "y": 0,
-              "width": 6,
+              "width": 4,
               "height": 4,
               "element": {
                 "kind": "ElementReference",
@@ -963,9 +996,22 @@
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 6,
+              "x": 4,
               "y": 0,
-              "width": 6,
+              "width": 4,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-10"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 8,
+              "y": 0,
+              "width": 4,
               "height": 4,
               "element": {
                 "kind": "ElementReference",
@@ -978,7 +1024,7 @@
             "spec": {
               "x": 12,
               "y": 0,
-              "width": 6,
+              "width": 4,
               "height": 4,
               "element": {
                 "kind": "ElementReference",
@@ -989,9 +1035,22 @@
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 18,
+              "x": 16,
               "y": 0,
-              "width": 6,
+              "width": 4,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-8"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 20,
+              "y": 0,
+              "width": 4,
               "height": 4,
               "element": {
                 "kind": "ElementReference",
@@ -1004,8 +1063,8 @@
             "spec": {
               "x": 0,
               "y": 4,
-              "width": 16,
-              "height": 10,
+              "width": 12,
+              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-5"
@@ -1015,10 +1074,10 @@
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 16,
+              "x": 12,
               "y": 4,
-              "width": 8,
-              "height": 10,
+              "width": 12,
+              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-6"
@@ -1029,7 +1088,7 @@
             "kind": "GridLayoutItem",
             "spec": {
               "x": 0,
-              "y": 14,
+              "y": 13,
               "width": 12,
               "height": 8,
               "element": {
@@ -1042,51 +1101,12 @@
             "kind": "GridLayoutItem",
             "spec": {
               "x": 12,
-              "y": 14,
+              "y": 13,
               "width": 12,
               "height": 8,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-8"
-              }
-            }
-          },
-          {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 0,
-              "y": 22,
-              "width": 6,
-              "height": 7,
-              "element": {
-                "kind": "ElementReference",
                 "name": "panel-9"
-              }
-            }
-          },
-          {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 6,
-              "y": 22,
-              "width": 10,
-              "height": 7,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-10"
-              }
-            }
-          },
-          {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 16,
-              "y": 22,
-              "width": 8,
-              "height": 7,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-11"
               }
             }
           }
@@ -1128,7 +1148,7 @@
         "spec": {
           "name": "datasource",
           "pluginId": "prometheus",
-          "refresh": "never",
+          "refresh": "onDashboardLoad",
           "regex": "",
           "current": {
             "text": "",
@@ -1138,7 +1158,7 @@
           "multi": false,
           "includeAll": false,
           "label": "Data source",
-          "hide": "dontHide",
+          "hide": "inControlsMenu",
           "skipUrlSync": false,
           "allowCustomValue": true
         }
@@ -1167,11 +1187,12 @@
             }
           },
           "regex": "",
+          "regexApplyTo": "value",
           "sort": "disabled",
           "options": [],
           "multi": true,
           "includeAll": true,
-          "allowCustomValue": true
+          "allowCustomValue": false
         }
       }
     ]
