@@ -45,14 +45,29 @@ nfpms:
       - deb
       - rpm
       - apk
+    scripts:
+      preinstall: packaging/scripts/preinstall.sh
+      postinstall: packaging/scripts/postinstall.sh
+      preremove: packaging/scripts/preremove.sh
+      postremove: packaging/scripts/postremove.sh
     contents:
       - src: packaging/systemd/solis-http-exporter.service
         dst: /usr/lib/systemd/system/solis-http-exporter.service
       - src: packaging/sysusers/solis-http-exporter.conf
         dst: /usr/lib/sysusers.d/solis-http-exporter.conf
+      - dst: /etc/solis-http-exporter
+        type: dir
+        file_info:
+          owner: root
+          group: solis-exporter
+          mode: 0750
       - src: examples/config.yml
         dst: /etc/solis-http-exporter/config.yml
         type: config|noreplace
+        file_info:
+          owner: root
+          group: solis-exporter
+          mode: 0640
       - src: README.md
         dst: /usr/share/doc/solis-http-exporter/README.md
 

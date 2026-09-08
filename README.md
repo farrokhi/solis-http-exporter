@@ -50,6 +50,15 @@ inverters:
 
 It is recommended to use `password_file` and keep it at mode `0600` next to the config file, instead of the inline `password`.
 
+Installed from a package the exporter runs as the `solis-exporter` user, which cannot read a
+root-owned `0600` file. The package sets `config.yml` up for you; give each password file you
+add the same treatment:
+
+```
+chown root:solis-exporter /etc/solis-http-exporter/house.password
+chmod 0640 /etc/solis-http-exporter/house.password
+```
+
 ## How to run
 
 Download the binary or one of the packages (deb, rpm, etc) from the
@@ -110,7 +119,7 @@ scrape_configs:
   - job_name: solis
     scrape_interval: 60s
     static_configs:
-      - targets: [solis-exporter.example.lan:9613]
+      - targets: ['solis-exporter.example.lan:9613']
 ```
 
 There is no cache in front of the loggers, this means each scrape is an expensive request for your inverter, so you may not want to reduce the scrape interval.

@@ -58,6 +58,22 @@ jobs:
           version: "~> v2"
           args: release --snapshot --clean --skip=publish
 
+      - name: packages install and run as their service user
+        run: |
+          for image in ubuntu:24.04 fedora:41 alpine:3.20; do
+            case "$image" in
+              ubuntu*) format=deb ;;
+              fedora*) format=rpm ;;
+              alpine*) format=apk ;;
+            esac
+            echo "::group::$image ($format)"
+            docker run --rm \
+              -v "$PWD/dist":/pkg:ro \
+              -v "$PWD/packaging/verify-install.sh":/verify.sh:ro \
+              "$image" sh /verify.sh "$format" /pkg
+            echo "::endgroup::"
+          done
+
       - uses: docker/build-push-action@v7
         with:
           context: .
