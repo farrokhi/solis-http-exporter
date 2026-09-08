@@ -116,7 +116,7 @@ solis_inverter_info{firmware="780036",model="202",serial="1802020228090133",targ
 func TestCollectOmitsUnavailableFields(t *testing.T) {
 	status := healthy()
 	status.EnergyTotalKWh = nil
-	status.BadFields = []string{"yield_total"}
+	status.BadFields = []inverter.BadField{{Name: "yield_total"}}
 
 	targets := []Target{{Name: "house", Fetcher: fakeFetcher{status: status}}}
 

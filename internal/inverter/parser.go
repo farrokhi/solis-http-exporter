@@ -44,8 +44,14 @@ type Status struct {
 
 	Alert string
 
-	// BadFields names the fields that failed to parse, for logging.
-	BadFields []string
+	// BadFields holds the fields that failed to parse, for logging.
+	BadFields []BadField
+}
+
+// BadField is a field the logger sent that could not be used.
+type BadField struct {
+	Name string
+	Raw  string
 }
 
 // AlertActive reports whether the logger is flagging anything.
@@ -79,7 +85,7 @@ func Parse(data []byte) (Status, error) {
 	number := func(raw, name string, lowest float64) *float64 {
 		v, err := strconv.ParseFloat(strings.TrimSpace(raw), 64)
 		if err != nil || math.IsNaN(v) || math.IsInf(v, 0) || v < lowest {
-			s.BadFields = append(s.BadFields, name)
+			s.BadFields = append(s.BadFields, BadField{name, raw})
 			return nil
 		}
 		return &v
@@ -92,7 +98,7 @@ func Parse(data []byte) (Status, error) {
 	s.EnergyTotalKWh = number(fields[fieldYieldTotal], "yield_total", 0)
 
 	if s.Alert == "" {
-		s.BadFields = append(s.BadFields, "alerts")
+		s.BadFields = append(s.BadFields, BadField{"alerts", ""})
 	}
 
 	return s, nil

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 )
 
@@ -157,14 +158,23 @@ func checkFloat(t *testing.T, name string, got, want *float64) {
 	}
 }
 
-func checkBadFields(t *testing.T, got, want []string) {
+func checkBadFields(t *testing.T, got []BadField, want []string) {
 	t.Helper()
-	if len(got) != len(want) {
-		t.Fatalf("BadFields = %v, want %v", got, want)
+	names := make([]string, len(got))
+	for i, f := range got {
+		names[i] = f.Name
 	}
-	for i := range got {
-		if got[i] != want[i] {
-			t.Fatalf("BadFields = %v, want %v", got, want)
-		}
+	if !slices.Equal(names, want) {
+		t.Fatalf("BadFields = %v, want %v", names, want)
+	}
+}
+
+func TestBadFieldCarriesTheRawValue(t *testing.T) {
+	got, err := Parse([]byte("1802020228090133;780036;202;40.1;900;5.4;n/a;NO;"))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	if len(got.BadFields) != 1 || got.BadFields[0] != (BadField{"yield_total", "n/a"}) {
+		t.Errorf("BadFields = %+v, want the offending value kept", got.BadFields)
 	}
 }

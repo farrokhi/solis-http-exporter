@@ -82,7 +82,7 @@ func (c *Collector) scrape(ctx context.Context, ch chan<- prometheus.Metric, t T
 	gauge(ch, upDesc, 1, t.Name)
 
 	for _, field := range status.BadFields {
-		c.log.Warn("invalid inverter field", "target", t.Name, "field", field)
+		c.log.Warn("invalid inverter field", "target", t.Name, "field", field.Name, "value", field.Raw)
 	}
 	if status.AlertActive() {
 		c.log.Warn("inverter reports an alert", "target", t.Name, "alert", status.Alert)
