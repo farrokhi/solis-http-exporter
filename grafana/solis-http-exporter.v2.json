@@ -22,10 +22,7 @@
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
           "name": "Annotations & Alerts",
-          "builtIn": true,
-          "legacyOptions": {
-            "type": "dashboard"
-          }
+          "builtIn": true
         }
       }
     ],
@@ -97,7 +94,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "text"
                       }
                     ]
@@ -174,7 +171,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "text"
                       }
                     ]
@@ -254,7 +251,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "text"
                       }
                     ]
@@ -335,7 +332,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "text"
                       }
                     ]
@@ -417,7 +414,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "green"
                       },
                       {
@@ -496,7 +493,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "text"
                       }
                     ]
@@ -550,7 +547,7 @@
         "spec": {
           "id": 6,
           "title": "Inverter temperature",
-          "description": "Dashed lines mark 60 and 70 C. Adjust them to your inverter's rating.",
+          "description": "Dashed lines mark 60 and 70 C; adjust them to your inverter rating. The axis is held to 0-80 C so a couple of degrees does not read as a spike, but it stretches if the reading goes past that.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -605,7 +602,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": -273,
                         "color": "text"
                       },
                       {
@@ -627,6 +624,8 @@
                     "axisColorMode": "text",
                     "axisLabel": "",
                     "axisPlacement": "auto",
+                    "axisSoftMax": 80,
+                    "axisSoftMin": 0,
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
@@ -724,7 +723,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "text"
                       }
                     ]
@@ -852,7 +851,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "red"
                       },
                       {
@@ -949,7 +948,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": null,
+                        "value": 0,
                         "color": "text"
                       }
                     ]
