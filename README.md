@@ -99,7 +99,10 @@ The `target` label is to differentiate between multiple inverters, and contains 
 Metrics are in Joules instead of kWh, to keep Prometheus happy. That is easy to convert to kWh in Grafana, in case you are building your own dashboards.
 
 You can also import the [sample dashboard](grafana/solis-http-exporter.json) from this repo and
-adjust it to your liking.
+adjust it to your liking. Grafana 12 and newer edit dashboards in schema v2, and pasting the
+file above into "Edit as code" will be rejected for having no `metadata` or `spec`; use
+[the v2 copy](grafana/solis-http-exporter.v2.json) there. It is generated from the v1 file by
+`grafana/regenerate-v2.sh`, so edit the v1 one and rerun that.
 
 Note that the today's number reset at midnight. This is why it is a gauge, while
 the lifetime number is a counter.
