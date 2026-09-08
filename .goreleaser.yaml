@@ -1,0 +1,73 @@
+version: 2
+
+project_name: solis-http-exporter
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - binary: solis_http_exporter
+    main: ./cmd/solis_http_exporter
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }} -X main.commit={{ .ShortCommit }}
+    goos:
+      - linux
+      - darwin
+      - freebsd
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - formats:
+      - tar.gz
+    files:
+      - README.md
+      - LICENSE
+      - examples/config.yml
+      - packaging/systemd/solis-http-exporter.service
+
+nfpms:
+  - package_name: solis-http-exporter
+    vendor: Babak Farrokhi
+    maintainer: Babak Farrokhi <babak@perforlabs.com>
+    homepage: https://github.com/farrokhi/solis-http-exporter
+    description: Prometheus exporter for Solis inverter Wi-Fi logging sticks.
+    license: MIT
+    bindir: /usr/bin
+    formats:
+      - deb
+      - rpm
+      - apk
+    contents:
+      - src: packaging/systemd/solis-http-exporter.service
+        dst: /usr/lib/systemd/system/solis-http-exporter.service
+      - src: packaging/sysusers/solis-http-exporter.conf
+        dst: /usr/lib/sysusers.d/solis-http-exporter.conf
+      - src: examples/config.yml
+        dst: /etc/solis-http-exporter/config.yml
+        type: config|noreplace
+      - src: README.md
+        dst: /usr/share/doc/solis-http-exporter/README.md
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  use: github
+  sort: asc
+  groups:
+    - title: Features
+      regexp: '^feat'
+      order: 0
+    - title: Fixes
+      regexp: '^fix'
+      order: 1
+    - title: Other
+      order: 2

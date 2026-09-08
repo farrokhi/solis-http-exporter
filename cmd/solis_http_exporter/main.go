@@ -11,8 +11,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"runtime/debug"
-	"strings"
 	"syscall"
 	"time"
 
@@ -177,13 +175,8 @@ func newLogger(level string) (*slog.Logger, error) {
 }
 
 func versionString() string {
-	v := version
-	// A go install from a tag knows the version better than this binary does.
-	if bi, ok := debug.ReadBuildInfo(); ok && strings.HasPrefix(bi.Main.Version, "v") {
-		v = strings.TrimPrefix(bi.Main.Version, "v")
+	if commit == "" {
+		return version
 	}
-	if commit != "" {
-		v += " (" + commit + ")"
-	}
-	return v
+	return version + " (" + commit + ")"
 }
