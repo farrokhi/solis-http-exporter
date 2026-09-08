@@ -1,0 +1,4 @@
+/solis_http_exporter
+/dist/
+*.password
+/autarco-prometheus-exporter-spec.md
