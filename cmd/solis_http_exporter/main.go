@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime/debug"
+	"strings"
 	"syscall"
 	"time"
 
@@ -27,7 +28,7 @@ import (
 
 // Overwritten at release time with -ldflags.
 var (
-	version = "dev"
+	version = "1.0.0"
 	commit  = ""
 )
 
@@ -177,10 +178,9 @@ func newLogger(level string) (*slog.Logger, error) {
 
 func versionString() string {
 	v := version
-	if v == "dev" {
-		if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
-			v = bi.Main.Version
-		}
+	// A go install from a tag knows the version better than this binary does.
+	if bi, ok := debug.ReadBuildInfo(); ok && strings.HasPrefix(bi.Main.Version, "v") {
+		v = strings.TrimPrefix(bi.Main.Version, "v")
 	}
 	if commit != "" {
 		v += " (" + commit + ")"
