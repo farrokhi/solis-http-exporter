@@ -77,19 +77,20 @@ func Parse(data []byte) (Status, error) {
 		return Status{}, ErrInvalidSerial
 	}
 
-	number := func(raw, name string) *float64 {
+	number := func(raw, name string, lowest float64) *float64 {
 		v, err := strconv.ParseFloat(strings.TrimSpace(raw), 64)
-		if err != nil || math.IsNaN(v) || math.IsInf(v, 0) {
+		if err != nil || math.IsNaN(v) || math.IsInf(v, 0) || v < lowest {
 			s.BadFields = append(s.BadFields, name)
 			return nil
 		}
 		return &v
 	}
 
-	s.TemperatureCelsius = number(fields[fieldTemperature], "temperature")
-	s.PowerWatts = number(fields[fieldPower], "current_power")
-	s.EnergyTodayKWh = number(fields[fieldYieldToday], "yield_today")
-	s.EnergyTotalKWh = number(fields[fieldYieldTotal], "yield_total")
+	// Only temperature can sensibly be below zero.
+	s.TemperatureCelsius = number(fields[fieldTemperature], "temperature", math.Inf(-1))
+	s.PowerWatts = number(fields[fieldPower], "current_power", 0)
+	s.EnergyTodayKWh = number(fields[fieldYieldToday], "yield_today", 0)
+	s.EnergyTotalKWh = number(fields[fieldYieldTotal], "yield_total", 0)
 
 	if s.Alert == "" {
 		s.BadFields = append(s.BadFields, "alerts")

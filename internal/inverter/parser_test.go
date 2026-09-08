@@ -124,6 +124,20 @@ func TestParseRejectsNonFinite(t *testing.T) {
 	checkBadFields(t, got.BadFields, []string{"temperature", "current_power"})
 }
 
+func TestParseRejectsNegativeEnergyAndPower(t *testing.T) {
+	got, err := Parse([]byte("1802020228090133;780036;202;-4.5;-1;-0.2;-34293.5;NO;"))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	if got.PowerWatts != nil || got.EnergyTodayKWh != nil || got.EnergyTotalKWh != nil {
+		t.Error("negative power and energy should not produce values")
+	}
+	if got.TemperatureCelsius == nil || *got.TemperatureCelsius != -4.5 {
+		t.Error("a freezing inverter is a real reading")
+	}
+	checkBadFields(t, got.BadFields, []string{"current_power", "yield_today", "yield_total"})
+}
+
 func TestParseEmptyAlert(t *testing.T) {
 	got, err := Parse([]byte("1802020228090133;780036;202;40.1;900;5.4;34293.5;;"))
 	if err != nil {
