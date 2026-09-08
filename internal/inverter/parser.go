@@ -71,8 +71,7 @@ func Parse(data []byte) (Status, error) {
 		Alert:    fields[fieldAlerts],
 	}
 
-	// The logger reports an all-zero serial while the inverter is still
-	// starting up, along with junk in every other field.
+	// An all-zero serial means the inverter is still booting and the rest is junk.
 	if strings.Trim(s.Serial, "0") == "" {
 		return Status{}, ErrInvalidSerial
 	}

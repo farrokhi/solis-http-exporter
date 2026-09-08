@@ -14,7 +14,7 @@ import (
 
 const joulesPerKWh = 3.6e6
 
-// Fetcher reads one status. It is the seam other transports would implement.
+// Fetcher reads one status.
 type Fetcher interface {
 	Fetch(ctx context.Context) (inverter.Status, error)
 }

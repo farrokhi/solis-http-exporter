@@ -1,6 +1,6 @@
 module github.com/farrokhi/solis-http-exporter
 
-go 1.27
+go 1.26.0
 
 require (
 	github.com/prometheus/client_golang v1.23.2

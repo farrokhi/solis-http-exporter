@@ -57,7 +57,7 @@ func New(o Options) *Client {
 	}
 }
 
-// URL returns the endpoint this client reads, for logging.
+// URL returns the endpoint this client reads.
 func (c *Client) URL() string { return c.url }
 
 // Fetch reads one status record.
