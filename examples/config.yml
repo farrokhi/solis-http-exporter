@@ -1,0 +1,14 @@
+# Once the logging stick joins your Wi-Fi, its web password becomes your
+# Wi-Fi password. Keep this file and the password files at mode 0600.
+
+inverters:
+  - name: house
+    address: 192.168.2.164
+    username: admin
+    password_file: /etc/solis-http-exporter/house.password
+
+  - name: garage
+    address: 192.168.2.165
+    username: admin
+    password_file: /etc/solis-http-exporter/garage.password
+    timeout: 10s
