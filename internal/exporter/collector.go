@@ -4,6 +4,7 @@ package exporter
 import (
 	"context"
 	"log/slog"
+	"math"
 	"sync"
 	"time"
 
@@ -100,10 +101,10 @@ func (c *Collector) scrape(ctx context.Context, ch chan<- prometheus.Metric, t T
 		gauge(ch, temperatureDesc, *v, t.Name)
 	}
 	if v := status.EnergyTodayKWh; v != nil {
-		gauge(ch, todayDesc, *v*joulesPerKWh, t.Name)
+		gauge(ch, todayDesc, joules(*v), t.Name)
 	}
 	if v := status.EnergyTotalKWh; v != nil {
-		ch <- prometheus.MustNewConstMetric(totalDesc, prometheus.CounterValue, *v*joulesPerKWh, t.Name)
+		ch <- prometheus.MustNewConstMetric(totalDesc, prometheus.CounterValue, joules(*v), t.Name)
 	}
 	if status.Alert != "" {
 		gauge(ch, alertDesc, boolean(status.AlertActive()), t.Name)
@@ -112,6 +113,9 @@ func (c *Collector) scrape(ctx context.Context, ch chan<- prometheus.Metric, t T
 	ch <- prometheus.MustNewConstMetric(infoDesc, prometheus.GaugeValue, 1,
 		t.Name, status.Serial, status.Firmware, status.Model)
 }
+
+// Sub-joule digits are float64 noise, not precision.
+func joules(kWh float64) float64 { return math.Round(kWh * joulesPerKWh) }
 
 func gauge(ch chan<- prometheus.Metric, d *prometheus.Desc, v float64, labels ...string) {
 	ch <- prometheus.MustNewConstMetric(d, prometheus.GaugeValue, v, labels...)

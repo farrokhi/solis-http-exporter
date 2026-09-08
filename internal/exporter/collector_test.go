@@ -130,6 +130,20 @@ solis_inverter_energy_today_joules{target="house"} 1.944e+07
 `, "solis_up", "solis_inverter_energy_joules_total", "solis_inverter_energy_today_joules")
 }
 
+// 2.2 kWh lands off a whole joule.
+func TestCollectRoundsEnergyToWholeJoules(t *testing.T) {
+	status := healthy()
+	status.EnergyTodayKWh = new(2.2)
+
+	targets := []Target{{Name: "house", Fetcher: fakeFetcher{status: status}}}
+
+	collect(t, targets, `
+# HELP solis_inverter_energy_today_joules Energy produced today.
+# TYPE solis_inverter_energy_today_joules gauge
+solis_inverter_energy_today_joules{target="house"} 7.92e+06
+`, "solis_inverter_energy_today_joules")
+}
+
 func TestCollectReportsActiveAlert(t *testing.T) {
 	status := healthy()
 	status.Alert = "F23"
