@@ -59,7 +59,8 @@ func newRootCmd() *cobra.Command {
 
 	f := cmd.Flags()
 	f.StringVar(&opts.configFile, "config.file", "/etc/solis-http-exporter/config.yml", "configuration file to read")
-	f.StringVar(&opts.listenAddress, "web.listen-address", ":9613", "address to serve on")
+	f.StringVar(&opts.listenAddress, "web.listen-address", ":9613",
+		"address to serve on; give an IP to bind one interface, as in 127.0.0.1:9613")
 	f.StringVar(&opts.telemetryPath, "web.telemetry-path", "/metrics", "path to serve metrics under")
 	f.StringVar(&opts.logLevel, "log.level", "info", "one of debug, info, warn or error")
 

@@ -67,6 +67,9 @@ solis_http_exporter --config.file=/etc/solis-http-exporter/config.yml
 | `--web.telemetry-path` | `/metrics` |
 | `--log.level` | `info`, or `debug`, `warn`, `error` |
 
+The default `:9613` listens on every address the machine has. Put an IP in front of the port to
+narrow it down: `127.0.0.1:9613` for loopback, or `192.168.1.5:9613` for one interface.
+
 `/-/healthy` returns 200 if the process is up and the config is valid. 
 
 ## Metrics
