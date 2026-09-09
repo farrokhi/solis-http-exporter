@@ -665,8 +665,8 @@
         "kind": "Panel",
         "spec": {
           "id": 7,
-          "title": "Energy produced today",
-          "description": "Resets to zero at midnight, which is why it is a gauge rather than a counter.",
+          "title": "Daily yield",
+          "description": "One bar per day, stacked so the full height is the household total for that day. Today's bar grows as the day goes on. Buckets are UTC days, which line up with local days in central Europe.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -683,8 +683,10 @@
                         "name": "${datasource}"
                       },
                       "spec": {
-                        "expr": "solis_inverter_energy_today_joules{target=~\"$target\"} / 3600000",
-                        "legendFormat": "{{target}}"
+                        "expr": "max_over_time(solis_inverter_energy_today_joules{target=~\"$target\"}[1d] offset -1d) / 3600000",
+                        "interval": "1d",
+                        "legendFormat": "{{target}}",
+                        "maxDataPoints": 400
                       }
                     },
                     "refId": "A",
@@ -698,21 +700,28 @@
           },
           "vizConfig": {
             "kind": "VizConfig",
-            "group": "timeseries",
-            "version": "13.2.1",
+            "group": "barchart",
+            "version": "",
             "spec": {
               "options": {
+                "barRadius": 0,
+                "barWidth": 0.8,
+                "fullHighlight": false,
+                "groupWidth": 0.7,
                 "legend": {
-                  "calcs": [],
                   "displayMode": "list",
                   "placement": "bottom",
                   "showLegend": true
                 },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "normal",
                 "tooltip": {
-                  "hideZeros": false,
                   "mode": "multi",
                   "sort": "desc"
-                }
+                },
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 0
               },
               "fieldConfig": {
                 "defaults": {
@@ -733,34 +742,10 @@
                   },
                   "custom": {
                     "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
                     "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 15,
+                    "fillOpacity": 80,
                     "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "pointSize": 5,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "normal"
-                    },
+                    "lineWidth": 1,
                     "thresholdsStyle": {
                       "mode": "off"
                     }

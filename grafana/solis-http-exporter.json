@@ -555,52 +555,47 @@
       "description": "Dashed lines mark 60 and 70 C; adjust them to your inverter rating. The axis is held to 0-80 C so a couple of degrees does not read as a spike, but it stretches if the reading goes past that."
     },
     {
+      "id": 7,
+      "type": "barchart",
+      "title": "Daily yield",
+      "description": "One bar per day, stacked so the full height is the household total for that day. Today's bar grows as the day goes on. Buckets are UTC days, which line up with local days in central Europe.",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
-      "description": "Resets to zero at midnight, which is why it is a gauge rather than a counter.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max_over_time(solis_inverter_energy_today_joules{target=~\"$target\"}[1d] offset -1d) / 3600000",
+          "legendFormat": "{{target}}",
+          "interval": "1d",
+          "maxDataPoints": 400
+        }
+      ],
       "fieldConfig": {
         "defaults": {
+          "unit": "kwatth",
+          "decimals": 1,
+          "min": 0,
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 15,
+            "lineWidth": 1,
+            "fillOpacity": 80,
             "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
             "thresholdsStyle": {
               "mode": "off"
             }
           },
-          "decimals": 1,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -609,44 +604,30 @@
                 "value": 0
               }
             ]
-          },
-          "unit": "kwatth"
-        }
+          }
+        },
+        "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 13
-      },
-      "id": 7,
       "options": {
+        "orientation": "auto",
+        "stacking": "normal",
+        "showValue": "auto",
+        "barWidth": 0.8,
+        "groupWidth": 0.7,
+        "barRadius": 0,
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0,
+        "fullHighlight": false,
         "legend": {
-          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
-      },
-      "pluginVersion": "13.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "expr": "solis_inverter_energy_today_joules{target=~\"$target\"} / 3600000",
-          "legendFormat": "{{target}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Energy produced today",
-      "type": "timeseries"
+      }
     },
     {
       "datasource": {
