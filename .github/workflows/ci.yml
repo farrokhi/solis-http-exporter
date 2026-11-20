@@ -31,18 +31,22 @@ jobs:
       - run: go test -race ./...
 
   toolchain:
-    # Building only on the newest Go hides a broken go directive.
+    # Building only on the newest Go hides a broken go directive. Build on
+    # exactly the version it names; the toolchain line would pick a newer one.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
 
+      - id: min
+        run: echo "go=$(sed -n 's/^go //p' go.mod)" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-go@v7
         with:
-          go-version: "1.22"
+          go-version: ${{ steps.min.outputs.go }}
 
       - run: go build ./...
         env:
-          GOTOOLCHAIN: auto
+          GOTOOLCHAIN: local
 
   build:
     runs-on: ubuntu-latest
