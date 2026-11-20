@@ -5,7 +5,12 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" \
+
+# .git is not in the build context, so nothing is stamped unless passed in.
+ARG VERSION=
+ARG COMMIT=
+RUN CGO_ENABLED=0 go build -trimpath \
+        -ldflags="-s -w -X main.version=${VERSION} -X main.commit=${COMMIT}" \
         -o /solis_http_exporter ./cmd/solis_http_exporter
 
 FROM gcr.io/distroless/static-debian12:nonroot

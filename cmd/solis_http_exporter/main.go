@@ -3,6 +3,7 @@
 package main
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
@@ -11,6 +12,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/debug"
+	"strings"
 	"syscall"
 	"time"
 
@@ -24,9 +27,9 @@ import (
 	"github.com/farrokhi/solis-http-exporter/internal/inverter"
 )
 
-// Overwritten at release time with -ldflags.
+// Set at release time with -ldflags; left empty, the build info is used.
 var (
-	version = "1.0.0"
+	version = ""
 	commit  = ""
 )
 
@@ -176,6 +179,27 @@ func newLogger(level string) (*slog.Logger, error) {
 }
 
 func versionString() string {
+	info, _ := debug.ReadBuildInfo()
+	return resolveVersion(version, commit, info)
+}
+
+// resolveVersion prefers the ldflags values and falls back to what the go
+// command stamped, which is all a go install build carries.
+func resolveVersion(version, commit string, info *debug.BuildInfo) string {
+	if info != nil {
+		if version == "" {
+			version = strings.TrimPrefix(info.Main.Version, "v")
+		}
+		if commit == "" {
+			for _, s := range info.Settings {
+				if s.Key == "vcs.revision" {
+					commit = s.Value[:min(len(s.Value), 7)]
+				}
+			}
+		}
+	}
+
+	version = cmp.Or(version, "(devel)")
 	if commit == "" {
 		return version
 	}
